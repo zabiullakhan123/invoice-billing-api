@@ -1,0 +1,40 @@
+# Full stack:      docker compose up --build
+# Database only:   docker compose up -d mysql   (then run BillingApplication from your IDE)
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: billing-mysql
+    environment:
+      MYSQL_DATABASE: billing
+      MYSQL_USER: billing
+      MYSQL_PASSWORD: billing
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: billing-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/billing
+      DB_USERNAME: billing
+      DB_PASSWORD: billing
+      # Dev default below; set JWT_SECRET in your shell or a .env file for anything shared
+      JWT_SECRET: ${JWT_SECRET:-4aw/Ucpa8vXAHzUqSanM2ksBxaNasLDOBurXB6OB+pq5xIZJKowvWbc3UbK2RoDH}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql-data:
