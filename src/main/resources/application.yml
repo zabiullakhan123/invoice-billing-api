@@ -3,7 +3,7 @@ spring:
     name: billing-api
 
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3307/billing}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/billing}
     username: ${DB_USERNAME:billing}
     password: ${DB_PASSWORD:billing}
 
