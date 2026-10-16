@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: billing
       MYSQL_ROOT_PASSWORD: rootpass
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
